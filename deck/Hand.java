@@ -31,6 +31,13 @@ public class Hand implements Comparable<Hand> {
 		hand[4] = c4;
 	}
 
+	public Hand(String string) {
+		this();
+		for (int i = 0; i < string.length() / 2; i++) {
+			hand[i] = new Card(string.substring(2 * i, 2 * (i + 1)));
+		}
+	}
+
 	public Card[] getHand() {
 		return hand;
 	}
@@ -82,8 +89,11 @@ public class Hand implements Comparable<Hand> {
 
 	@Override
 	public int compareTo(Hand other) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = strength - other.getStrength();
+		for (int i = 0; i < cardRank.length && result == 0; i++) {
+			result = cardRank[i] - other.getCardRank()[i];
+		}
+		return result;
 	}
 
 	public void arrangeHand() {
@@ -213,6 +223,59 @@ public class Hand implements Comparable<Hand> {
 					strength = 7;
 				} else if (hasTrips) {
 					strength = 4;
+				} else {
+					boolean hasPair = false;
+					boolean isTwoPair = false;
+					for (int i = 0; i < hand.length - 1 && !hasPair; i++) {
+
+						if (hand[i].getRank() == hand[i + 1].getRank()) {
+
+							hasPair = true;
+							cardRank[0] = hand[i].getRank();
+							// check two pair
+							if (i == 0 && hand[2].getRank() == hand[3].getRank()) {
+								isTwoPair = true;
+								cardRank[1] = hand[2].getRank();
+								cardRank[2] = hand[4].getRank();
+							} else if (i == 0 && hand[3].getRank() == hand[4].getRank()) {
+								isTwoPair = true;
+								cardRank[1] = hand[3].getRank();
+								cardRank[2] = hand[2].getRank();
+							} else if (i == 1 && hand[3].getRank() == hand[4].getRank()) {
+								isTwoPair = true;
+								cardRank[1] = hand[3].getRank();
+								cardRank[2] = hand[0].getRank();
+							} else {
+								if (i <= 0) {
+									cardRank[1] = hand[2].getRank();
+								} else {
+									cardRank[1] = hand[0].getRank();
+								}
+								if (i <= 1) {
+									cardRank[2] = hand[3].getRank();
+								} else {
+									cardRank[2] = hand[1].getRank();
+								}
+								if (i <= 2) {
+									cardRank[3] = hand[4].getRank();
+								} else {
+									cardRank[3] = hand[2].getRank();
+								}
+							}
+
+						}
+					}
+					if (isTwoPair) {
+						strength = 3;
+					} else if (hasPair) {
+						strength = 2;
+					} else {
+						strength = 1;
+						for (int i = 0; i < cardRank.length; i++) {
+							cardRank[i] = hand[i].getRank();
+						}
+					}
+
 				}
 
 			}
@@ -245,15 +308,23 @@ public class Hand implements Comparable<Hand> {
 					+ RANKSTR.charAt(cardRank[2]);
 			break;
 		case 3:
-			
+			handRank = "Two Pair " + RANKSTR.charAt(cardRank[0]) + "'s and " + RANKSTR.charAt(cardRank[1]) + "'s +"
+					+ RANKSTR.charAt(cardRank[2]);
 			break;
 		case 2:
-			
+			handRank = "A Pair of " + RANKSTR.charAt(cardRank[0]) + "'s +";
+			for (int i = 1; i <= 3; i++) {
+				handRank = handRank + RANKSTR.charAt(cardRank[i]);
+			}
 			break;
 		case 1:
-			
+			handRank = "High Card " + RANKSTR.charAt(cardRank[0]) + " +";
+			for (int i = 1; i < cardRank.length; i++) {
+				handRank = handRank + RANKSTR.charAt(cardRank[i]);
+			}
 			break;
 		default:
+			handRank = "Unknown";
 
 		}
 	}

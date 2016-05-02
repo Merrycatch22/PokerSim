@@ -3,30 +3,57 @@ package driver;
 import deck.*;
 
 public class TestDriver {
-	public static void main(String[] args){
-		/*Card[][] deck=new Card[13][4];
-		for (int i=0;i<13;i++){
-			for (int j=0;j<4;j++){
-				deck[i][j]=new Card(i+2,j+1);
-				System.out.println(deck[i][j].toString());
-			}
-		}
-		Card[][] cloneDeck=new Card[13][4];
-		for (int i=0;i<13;i++){
-			for (int j=0;j<4;j++){
-				cloneDeck[i][j]=new Card(deck[i][j].toString());
-				System.out.println(cloneDeck[i][j].getRank()+" "+cloneDeck[i][j].getSuit());
-			}
-		}*/
-		//System.out.println(new Card("Kd").compareTo(new Card("Ad")));
-		Hand hand=new Hand(new Card("Qd"),new Card("Qs"),new Card("Qc"),new Card("Kh"),new Card("Ad"));
+	public static void main(String[] args) {
 		
-		hand.rankHand();
-		System.out.println(hand.toString());
-		hand.applyHandRank();
-		System.out.println(hand.getHandRank());
-		/*Deck deck=new Deck();
-		System.out.println(deck.toString());*/
-	
+		 /*Hand hand=new Hand("4d4cAh2s3d"); Hand other=new Hand ("5s5d2c3h4d");
+		 hand.rankHand(); other.rankHand(); hand.applyHandRank();
+		 other.applyHandRank(); System.out.println(hand.getHandRank());
+		 System.out.println(other.getHandRank());
+		 System.out.println(hand.compareTo(other));
+		 
+		long startTime, stopTime;
+		double elapsedTime;
+		startTime = System.nanoTime(); 
+		Deck deck = new Deck();
+		int size = deck.size();
+		Hand hand;
+		float all = 0.0f;
+		float event = 0.0f;
+		for (int a = 0; a < size; a++) {
+			for (int b = a + 1; b < size; b++) {
+				for (int c = b + 1; c < size; c++) {
+					for (int d = c + 1; d < size; d++) {
+						for (int e = d + 1; e < size; e++) {
+							hand=new Hand(deck.get(a),deck.get(b),deck.get(c),deck.get(d),deck.get(e));
+							hand.rankHand();
+							if(hand.getStrength()==1){
+								event++;
+							}
+							all++;
+						}
+					}
+				}
+			}
+
+		}
+		System.out.println(event+" / "+all+" = "+100.0f*event/all+"%");
+		
+		stopTime = System.nanoTime(); // stop timing ---------------------
+		elapsedTime = (double) (stopTime - startTime) / 1000000.0;
+		System.out.println(elapsedTime + " milliseconds.");*/
+		Deck deck=new Deck();
+		Hand hand=deck.dealHand();
+		Hand other=deck.dealHand();
+		 hand.rankHand(); 
+		 other.rankHand(); 
+		 hand.applyHandRank();
+		 other.applyHandRank();
+		 System.out.println(hand.toString());
+		 System.out.println(other.toString());
+		 System.out.println(hand.getHandRank());
+		 System.out.println(other.getHandRank());
+		 System.out.println(hand.compareTo(other));
+		
+
 	}
 }
