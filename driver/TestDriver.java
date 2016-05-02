@@ -19,10 +19,14 @@ public class TestDriver {
 			}
 		}*/
 		//System.out.println(new Card("Kd").compareTo(new Card("Ad")));
-		Hand hand=new Hand(new Card("3d"),new Card("3h"),new Card("3c"),new Card("As"),new Card("3s"));
-		hand.arrangeHand();
-		System.out.println(hand.toString());
+		Hand hand=new Hand(new Card("Qd"),new Card("Qs"),new Card("Qc"),new Card("Kh"),new Card("Ad"));
+		
 		hand.rankHand();
+		System.out.println(hand.toString());
+		hand.applyHandRank();
 		System.out.println(hand.getHandRank());
+		/*Deck deck=new Deck();
+		System.out.println(deck.toString());*/
+	
 	}
 }

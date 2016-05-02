@@ -2,7 +2,7 @@ package deck;
 
 public class Hand implements Comparable<Hand> {
 	private Card[] hand;
-	private int strength;
+	private int strength = 0;
 	private String handRank = "";
 	private int[] cardRank = { 0, 0, 0, 0, 0 };
 	/**
@@ -16,11 +16,9 @@ public class Hand implements Comparable<Hand> {
 
 	public Hand() {
 		hand = new Card[5];
-		strength = 0;
 	}
 
 	public Hand(Card[] hand) {
-		this();
 		this.hand = hand;
 	}
 
@@ -136,55 +134,128 @@ public class Hand implements Comparable<Hand> {
 		if (isFlush && isStraightAndNotWheel) { // straight flush no wheel
 			strength = 9;
 			cardRank[0] = hand[0].getRank();
-			handRank = "Straight Flush to " + RANKSTR.charAt(cardRank[0]);
 		} else if (isFlush && isWheel) {
 			strength = 9;
 			cardRank[0] = hand[1].getRank();// to get the 5
-			handRank = "Straight Flush to " + RANKSTR.charAt(cardRank[0]);
 		} else if (isFlush) {
 			strength = 6;
-			handRank = "Flush ";
 			for (int i = 0; i < cardRank.length; i++) {
 				cardRank[i] = hand[i].getRank();
-				handRank = handRank + RANKSTR.charAt(cardRank[i]);
 			}
 
 		} else if (isStraightAndNotWheel) {
 			strength = 5;
 			cardRank[0] = hand[0].getRank();
-			handRank = "Straight to " + RANKSTR.charAt(cardRank[0]);
+
 		} else if (isWheel) {
 			strength = 5;
-			cardRank[0] = hand[1].getRank();
-			handRank = "Straight to " + RANKSTR.charAt(cardRank[0]);
+			cardRank[0] = hand[1].getRank(); // force 5
+
 		} else {
-			// trips testing
-			boolean isQuads=false;
-			boolean isHouse=false;
-			boolean isTrips=false;
-			int combo=1;
-			for (int i = 0; i < hand.length - 3&&!isQuads; i++) {
-				combo=1;
+			// quads testing
+			boolean isQuads = false;
+			int quadCombo = 1;
+			for (int i = 0; i < hand.length - 3 && !isQuads; i++) {
+				quadCombo = 1;
 				for (int j = i + 1; j < i + 4; j++) {
 					if (hand[i].getRank() == hand[j].getRank()) {
-						combo++;
+						quadCombo++;
 					}
-					if(combo>=4){
-						isQuads=true;
-						cardRank[0]=hand[i].getRank();
+					if (quadCombo >= 4) {
+						isQuads = true;
+						cardRank[0] = hand[i].getRank();
 					}
 				}
 			}
-			if(isQuads){
-				strength=8;
-				handRank="Quad "+RANKSTR.charAt(cardRank[0])+"'s";
-			}else if(isHouse){
-				
-			}else if(isTrips){
-				
+			if (isQuads) {
+				strength = 8;
+			} else {
+				boolean hasTrips = false;
+				boolean isHouse = false;
+				int tripCombo = 1;
+				for (int i = 0; i < hand.length - 2 && !hasTrips; i++) {
+					tripCombo = 1;
+					for (int j = i + 1; j < i + 3; j++) {
+						if (hand[i].getRank() == hand[j].getRank()) {
+							tripCombo++;
+						}
+						if (tripCombo >= 3) {
+							hasTrips = true;
+							cardRank[0] = hand[i].getRank();
+							// house checking
+							if (i == 0 && hand[3].getRank() == hand[4].getRank()) {
+								isHouse = true;
+								cardRank[1] = hand[3].getRank();
+							} else if (i == 2 && hand[0].getRank() == hand[1].getRank()) {
+								isHouse = true;
+								cardRank[1] = hand[0].getRank();
+							} else {
+								switch (i) {
+								case 0:
+									cardRank[1] = hand[3].getRank();
+									cardRank[2] = hand[4].getRank();
+									break;
+								case 1:
+									cardRank[1] = hand[0].getRank();
+									cardRank[2] = hand[4].getRank();
+									break;
+								case 2:
+									cardRank[1] = hand[0].getRank();
+									cardRank[2] = hand[1].getRank();
+									break;
+								default:
+								}
+							}
+						}
+					}
+				}
+				if (isHouse) {
+					strength = 7;
+				} else if (hasTrips) {
+					strength = 4;
+				}
+
 			}
 		}
 
+	}
+
+	public void applyHandRank() {
+		switch (strength) {
+		case 9:
+			handRank = "Straight Flush to " + RANKSTR.charAt(cardRank[0]);
+			break;
+		case 8:
+			handRank = "Quad " + RANKSTR.charAt(cardRank[0]) + "'s";
+			break;
+		case 7:
+			handRank = "Full House " + RANKSTR.charAt(cardRank[0]) + "'s over " + RANKSTR.charAt(cardRank[1]) + "'s";
+			break;
+		case 6:
+			handRank = "" + RANKSTR.charAt(cardRank[0]) + " high Flush +";
+			for (int i = 1; i < cardRank.length; i++) {
+				handRank = handRank + RANKSTR.charAt(cardRank[i]);
+			}
+			break;
+		case 5:
+			handRank = "Straight to " + RANKSTR.charAt(cardRank[0]);
+			break;
+		case 4:
+			handRank = "Trip " + RANKSTR.charAt(cardRank[0]) + "'s +" + RANKSTR.charAt(cardRank[1])
+					+ RANKSTR.charAt(cardRank[2]);
+			break;
+		case 3:
+			
+			break;
+		case 2:
+			
+			break;
+		case 1:
+			
+			break;
+		default:
+
+		}
 	}
 
 }
