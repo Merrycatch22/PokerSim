@@ -60,12 +60,6 @@ public class Deck {
 
 	}
 
-	public Hand dealHand() {
-		Card[] array = { remove((int) (deck.size() * Math.random())),
-				remove((int) (deck.size() * Math.random())), remove((int) (deck.size() * Math.random())),
-				remove((int) (deck.size() * Math.random())), remove((int) (deck.size() * Math.random())) };
-		return new Hand(array);
-	}
 	public int size(){
 		return deck.size();
 	}

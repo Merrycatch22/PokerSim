@@ -1,12 +1,27 @@
 package deck;
 
 import java.util.ArrayList;
-
+/**
+ * A five card hand. Also holds ranking capabilities.
+ * @author Merrycatch22
+ *
+ */
 public class Hand implements Comparable<Hand> {
-	//private Card[] hand={new Card(),new Card(),new Card(),new Card(),new Card()};
+	/**
+	 * holds the 5 cards in array.
+	 */
 	private Card[] hand=new Card[5];
+	/**
+	 * Strength of the hand rank, 8 (Straight Flush) to 0 (High Card)
+	 */
 	private int strength = -1;
+	/**
+	 * Rank of the hand in words. Call apply handRank to run.
+	 */
 	private String handRank = "";
+	/**
+	 * Stores the sub-ranks. cardRank[0] is usually the <Hand> to "rank" part.
+	 */
 	private int[] cardRank = { 0, 0, 0, 0, 0 };
 	/**
 	 * 2 to "2", 14 to "A"
@@ -82,6 +97,9 @@ public class Hand implements Comparable<Hand> {
 	}
 
 	@Override
+	/**
+	 * @return The five cards, spaced.
+	 */
 	public String toString() {
 		String handString = "";
 		for (int i = 0; i < hand.length; i++) {
@@ -89,8 +107,12 @@ public class Hand implements Comparable<Hand> {
 		}
 		return handString;
 	}
-
 	@Override
+	/**
+	 * Compares two hands.
+	 * @return positive if this is bigger, negative otherwise, 0 if the same hand.
+	 */
+	
 	public int compareTo(Hand other) {
 		int result = strength - other.getStrength();
 		for (int i = 0; i < cardRank.length && result == 0; i++) {
@@ -98,6 +120,12 @@ public class Hand implements Comparable<Hand> {
 		}
 		return result;
 	}
+	/**
+	 * The first character designates the strength, subsequent characters subranks.
+	 * @param tokens
+	 * 
+	 * @return return positive if this is bigger, negative otherwise, 0 if the same hand.
+	 */
 	public int compareTo(String tokens){
 		int result=strength-Character.getNumericValue(tokens.charAt(0));
 		for (int i = 0; i < cardRank.length && i < tokens.length()-1 && result == 0; i++) {
@@ -110,30 +138,9 @@ public class Hand implements Comparable<Hand> {
 		}
 		return result;
 	}
-	
-	/*public int compareTo(int encode){
-		int result=strength-encode%100;
-		for (int i = 0; i < cardRank.length && result == 0; i++) {
-			encode/=100;
-			result = cardRank[i] - encode%100;
-		}
-		return result;
-	}
-	public int compareTo(int strength,int[] array){
-		int result = this.strength - strength;
-		for (int i = 0; i < cardRank.length && i<array.length && result == 0; i++) {
-			result = cardRank[i] - array[i];
-		}
-		return result;
-	}
-	public int compareTo(ArrayList<Integer> list){
-		int result = strength-list.get(0);
-		for(int i=0; i<cardRank.length&& i<list.size()-1&&result==0;i++){
-			result=cardRank[i]-list.get(i+1);
-		}
-		return result;
-	}*/
-
+	/**
+	 * Arranges the hand, largest hard in [0].
+	 */
 	public void arrangeHand() {
 		Card temp;
 		for (int i = 0; i < hand.length - 1; i++) {

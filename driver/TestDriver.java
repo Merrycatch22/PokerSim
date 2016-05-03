@@ -36,7 +36,7 @@ public class TestDriver {
 		System.out.println(elapsedTime + " milliseconds.");
 	}
 
-	public static void handComp() {
+	/*public static void handComp() {
 		Deck deck = new Deck();
 		Hand hand = deck.dealHand();
 		Hand other = deck.dealHand();
@@ -49,7 +49,7 @@ public class TestDriver {
 		System.out.println(hand.getHandRank());
 		System.out.println(other.getHandRank());
 		System.out.println(hand.compareTo(other));
-	}
+	}*/
 	public static void compStr(){
 		
 		Hand hand=new Hand("JdAsQdAdKd");
