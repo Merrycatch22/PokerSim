@@ -1,8 +1,11 @@
 package deck;
 
+import java.util.ArrayList;
+
 public class Hand implements Comparable<Hand> {
-	private Card[] hand;
-	private int strength = 0;
+	//private Card[] hand={new Card(),new Card(),new Card(),new Card(),new Card()};
+	private Card[] hand=new Card[5];
+	private int strength = -1;
 	private String handRank = "";
 	private int[] cardRank = { 0, 0, 0, 0, 0 };
 	/**
@@ -15,7 +18,7 @@ public class Hand implements Comparable<Hand> {
 	private final String SUITSTR = " cdhs";
 
 	public Hand() {
-		hand = new Card[5];
+		
 	}
 
 	public Hand(Card[] hand) {
@@ -95,6 +98,41 @@ public class Hand implements Comparable<Hand> {
 		}
 		return result;
 	}
+	public int compareTo(String tokens){
+		int result=strength-Character.getNumericValue(tokens.charAt(0));
+		for (int i = 0; i < cardRank.length && i < tokens.length()-1 && result == 0; i++) {
+			for (int j = 2; j < RANKSTR.length(); j++) {
+				if (RANKSTR.charAt(j) == tokens.charAt(i+1)) {
+					result=cardRank[i]-j;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+	
+	/*public int compareTo(int encode){
+		int result=strength-encode%100;
+		for (int i = 0; i < cardRank.length && result == 0; i++) {
+			encode/=100;
+			result = cardRank[i] - encode%100;
+		}
+		return result;
+	}
+	public int compareTo(int strength,int[] array){
+		int result = this.strength - strength;
+		for (int i = 0; i < cardRank.length && i<array.length && result == 0; i++) {
+			result = cardRank[i] - array[i];
+		}
+		return result;
+	}
+	public int compareTo(ArrayList<Integer> list){
+		int result = strength-list.get(0);
+		for(int i=0; i<cardRank.length&& i<list.size()-1&&result==0;i++){
+			result=cardRank[i]-list.get(i+1);
+		}
+		return result;
+	}*/
 
 	public void arrangeHand() {
 		Card temp;
@@ -142,23 +180,23 @@ public class Hand implements Comparable<Hand> {
 		}
 		// boolean isStraight=isWheel||isStraightAndNotWheel;
 		if (isFlush && isStraightAndNotWheel) { // straight flush no wheel
-			strength = 9;
+			strength = 8;
 			cardRank[0] = hand[0].getRank();
 		} else if (isFlush && isWheel) {
-			strength = 9;
+			strength = 8;
 			cardRank[0] = hand[1].getRank();// to get the 5
 		} else if (isFlush) {
-			strength = 6;
+			strength = 5;
 			for (int i = 0; i < cardRank.length; i++) {
 				cardRank[i] = hand[i].getRank();
 			}
 
 		} else if (isStraightAndNotWheel) {
-			strength = 5;
+			strength = 4;
 			cardRank[0] = hand[0].getRank();
 
 		} else if (isWheel) {
-			strength = 5;
+			strength = 4;
 			cardRank[0] = hand[1].getRank(); // force 5
 
 		} else {
@@ -178,7 +216,7 @@ public class Hand implements Comparable<Hand> {
 				}
 			}
 			if (isQuads) {
-				strength = 8;
+				strength = 7;
 			} else {
 				boolean hasTrips = false;
 				boolean isHouse = false;
@@ -220,9 +258,9 @@ public class Hand implements Comparable<Hand> {
 					}
 				}
 				if (isHouse) {
-					strength = 7;
+					strength = 6;
 				} else if (hasTrips) {
-					strength = 4;
+					strength = 3;
 				} else {
 					boolean hasPair = false;
 					boolean isTwoPair = false;
@@ -266,11 +304,11 @@ public class Hand implements Comparable<Hand> {
 						}
 					}
 					if (isTwoPair) {
-						strength = 3;
-					} else if (hasPair) {
 						strength = 2;
-					} else {
+					} else if (hasPair) {
 						strength = 1;
+					} else {
+						strength = 0;
 						for (int i = 0; i < cardRank.length; i++) {
 							cardRank[i] = hand[i].getRank();
 						}
@@ -285,39 +323,39 @@ public class Hand implements Comparable<Hand> {
 
 	public void applyHandRank() {
 		switch (strength) {
-		case 9:
+		case 8:
 			handRank = "Straight Flush to " + RANKSTR.charAt(cardRank[0]);
 			break;
-		case 8:
+		case 7:
 			handRank = "Quad " + RANKSTR.charAt(cardRank[0]) + "'s";
 			break;
-		case 7:
+		case 6:
 			handRank = "Full House " + RANKSTR.charAt(cardRank[0]) + "'s over " + RANKSTR.charAt(cardRank[1]) + "'s";
 			break;
-		case 6:
+		case 5:
 			handRank = "" + RANKSTR.charAt(cardRank[0]) + " high Flush +";
 			for (int i = 1; i < cardRank.length; i++) {
 				handRank = handRank + RANKSTR.charAt(cardRank[i]);
 			}
 			break;
-		case 5:
+		case 4:
 			handRank = "Straight to " + RANKSTR.charAt(cardRank[0]);
 			break;
-		case 4:
+		case 3:
 			handRank = "Trip " + RANKSTR.charAt(cardRank[0]) + "'s +" + RANKSTR.charAt(cardRank[1])
 					+ RANKSTR.charAt(cardRank[2]);
 			break;
-		case 3:
+		case 2:
 			handRank = "Two Pair " + RANKSTR.charAt(cardRank[0]) + "'s and " + RANKSTR.charAt(cardRank[1]) + "'s +"
 					+ RANKSTR.charAt(cardRank[2]);
 			break;
-		case 2:
+		case 1:
 			handRank = "A Pair of " + RANKSTR.charAt(cardRank[0]) + "'s +";
 			for (int i = 1; i <= 3; i++) {
 				handRank = handRank + RANKSTR.charAt(cardRank[i]);
 			}
 			break;
-		case 1:
+		case 0:
 			handRank = "High Card " + RANKSTR.charAt(cardRank[0]) + " +";
 			for (int i = 1; i < cardRank.length; i++) {
 				handRank = handRank + RANKSTR.charAt(cardRank[i]);

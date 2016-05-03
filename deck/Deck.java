@@ -43,8 +43,9 @@ public class Deck {
 		Card card;
 		while (iter.hasNext()) {
 			card = iter.next();
-			deck.remove(card);
+			
 			if (card.toString().equals(string)) {
+				deck.remove(card);
 				return card;
 			}
 		}
